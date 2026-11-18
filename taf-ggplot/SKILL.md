@@ -102,9 +102,20 @@ new ggplot. Start here, then adjust when asked.
 - Keep a 10 percent margin on the value axis so the highest values do not touch
   the edge: `scale_y_continuous(expand=expansion(mult=c(0, 0.1)))`.
 
+- Ensure there is space around the plot title and axis title. This space could
+  be approximately equivalent to the height of an uppercase character. The exact
+  amount of space is not that important, as long as the titles are not too close
+  to the nearest plot elements.
+
+– Ensure there is an outer margin between the plot and the image extent. The
+  extent of the margin could be similar to that used in presentation slides. The
+  exact margin is not that important, as long as the plot does not extend too
+  near the edge of the image.
+
 - Legend inside the plot, top left if there is space. Use small text and a white
   background without a border. If the top-left corner is occupied, choose
-  another location and say so. Prefer a vertical legend layout.
+  another location and say so. Prefer a vertical legend layout. In the case of
+  barplots, the legend entries should be in the same order as in the plot.
 
 If the workflow contains multiple ggplots, a common style can be implemented
 inside the `utilities.R` script.
