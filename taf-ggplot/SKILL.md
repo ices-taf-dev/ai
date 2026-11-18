@@ -116,8 +116,9 @@ new ggplot. Start here, then adjust when asked.
 
 - Legend inside the plot, top left if there is space. Use small text and a white
   background without a border. If the top-left corner is occupied, choose
-  another location and say so. Prefer a vertical legend layout. In the case of
-  barplots, the legend entries should be in the same order as in the plot.
+  another location and say so. In the case of horizontal grouped barplots,
+  prefer a vertical legend layout and ensure that legend entries are in the same
+  order as the bars in the plot: series A at the top, series B at the bottom.
 
 If the workflow contains multiple ggplots, a common style can be implemented
 inside the `utilities.R` script.
