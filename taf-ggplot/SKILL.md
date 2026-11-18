@@ -103,8 +103,8 @@ new ggplot. Start here, then adjust when asked.
   the edge: `scale_y_continuous(expand=expansion(mult=c(0, 0.1)))`.
 
 - Legend inside the plot, top left if there is space. Use small text and a white
-  background. If the top-left corner is occupied, choose another location and
-  say so.
+  background without a border. If the top-left corner is occupied, choose
+  another location and say so. Prefer a vertical legend layout.
 
 If the workflow contains multiple ggplots, a common style can be implemented
 inside the `utilities.R` script.
