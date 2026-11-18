@@ -97,7 +97,8 @@ new ggplot. Start here, then adjust when asked.
 - Base text size 12, with value labels sized to match (about 0.3 times the base
   size) if they are used. No numbers on bars.
 
-- Light gridlines.
+- Light gridlines. Scatterplots and line plots should have both x and y
+  gridlines, while barplots and boxplots have gridlines on the value axis.
 
 - Draw barplots without borders around the bars.
 
