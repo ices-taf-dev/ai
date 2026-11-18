@@ -99,6 +99,8 @@ new ggplot. Start here, then adjust when asked.
 
 - Light gridlines.
 
+- Draw barplots without borders around the bars.
+
 - Keep a 10 percent margin on the value axis so the highest values do not touch
   the edge: `scale_y_continuous(expand=expansion(mult=c(0, 0.1)))`.
 
