@@ -88,6 +88,9 @@ After every change, check that only the plots changed:
 The following preferences may serve as a useful starting point when formatting a
 new ggplot. Start here, then adjust when asked.
 
+- Palette: Instead of grayscale, prefer a color palette. Use the color palette
+  consistently between ggplots within the same workflow.
+
 - Title: bold, centered, no subtitle. Axis titles short. No axis title when the
   labels are self-explanatory.
 
