@@ -99,6 +99,8 @@ new ggplot. Start here, then adjust when asked.
 
 - Light gridlines.
 
+- Y-axis numbers should be rotated, aligned with the axis, not horizontal.
+
 - Draw barplots without borders around the bars.
 
 - Keep a 10 percent margin on the value axis so the highest values do not touch
