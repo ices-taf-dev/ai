@@ -119,7 +119,8 @@ Write and run one script at a time, with `source.taf()`, in this order:
 
 Each script reads only from the step before and writes only to its own folder
 [C1, C2]. Start each one with a short header of what it reads and writes [C11].
-Use base R and the TAF helpers [C10, C12].
+Use the TAF helpers [C10], and keep the packages to those the analysis needs
+[C12]. Plots may use base R or ggplot2; follow the template.
 
 After each script, compare the results with the developer's expectations, and
 with the earlier assessment if there is one. Raise any difference; do not

@@ -101,7 +101,7 @@ From [TRL]. A skill should say which level it is aiming for.
 | C9 | No rounding (`round(`, `rnd(`, `icesRound(`) in `data.R`, `model.R` or `output.R`. Rounding is for `report.R`. | note | [rules] 1.3(b); [workflow] | none |
 | C10 | Use the TAF helpers `mkdir`, `cp`, `read.taf`, `write.taf`, `taf.png` and `taf.data.path`. | warning | [gov]; [workflow]; [TAF] `?TAF-package` | none |
 | C11 | Each script starts with a comment saying what it does, then `Before:` and `After:` lines listing the files it reads and writes. | warning | [workflow]; [wiki] Example cat 1 stock assessment | none |
-| C12 | Keep dependencies to a minimum and prefer base R, unless the developer asks otherwise. | warning | [workflow]; [TAF] `?TAF-package` | none |
+| C12 | Keep dependencies to the packages the analysis needs. Base R and ggplot2 are both fine for plots. *open* (Q6) | warning | [workflow]; [TAF] `?TAF-package` | none |
 
 ## 5. Outputs and file formats
 
@@ -183,3 +183,7 @@ Also:
 
 - `qc.data.bib.valid` checks only the first entry.
 - `qc.only.relative.paths` checks only top-level scripts.
+
+Q6. **Base R or ggplot2.** [workflow] prefers base R for AI agents unless the
+developer asks otherwise; `taf-ggplot` covers ggplot2 when asked. Many TAF
+users prefer ggplot2, so should agents use it by default in templates?
