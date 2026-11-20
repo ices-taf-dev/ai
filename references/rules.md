@@ -39,7 +39,7 @@ From [TRL]. A skill should say which level it is aiming for.
 | Level | Reached when |
 |---|---|
 | 1 | The assessment code is on GitHub. |
-| 2 | The code passes `qcTAF::qc()`. Failing only `qc.software.bib.exists` and `qc.software.bib.valid` (no `SOFTWARE.bib`) still passes. |
+| 2 | The code passes `qcTAF::qc()`. Failing only the `SOFTWARE.bib` checks because there is no `SOFTWARE.bib` still passes. [TRL] names `exists` and `valid`, but qcTAF also fails `processed` without one, *open* (Q7). |
 | 3 | The code runs from start to finish (QC run test, under development). |
 | 4 | The assessment is published in ices-advice and linked to advice. |
 
@@ -149,8 +149,8 @@ recommended for assessments built from them. The markers are found by
 | T5 | tables | Tables are written (`write.taf`) | `output*.R`, `report*.R` |
 | T6 | diagnostics | Retrospective, residuals, Mohn's rho, leave-out, hindcast, jitter, runs test or MASE | `model*.R`, `output*.R`, `report*.R` |
 | T7 | report | A written report (Word, R Markdown or Quarto) | `report*.R` |
-| T8 | sag | SAG XML for the Stock Assessment Graphs database | any |
-| T9 | asd | ASD XML | any |
+| T8 | sag | SAG upload file for the Stock Assessment Graphs database: CSV from `icesSAG::writeSAG()` (older assessments wrote XML) | any |
+| T9 | asd | ASD upload file (XML, `icesASD::createASDxml()`) for the Advice and Scenarios Database | any |
 | T10 | flstock | An FLStock made as an output | `output*.R` |
 
 Some markers don't apply to some methods. For example, Category 3 has no
@@ -189,3 +189,10 @@ Also:
 Q6. **Base R or ggplot2.** [workflow] prefers base R for AI agents unless the
 developer asks otherwise; `taf-ggplot` covers ggplot2 when asked. Many TAF
 users prefer ggplot2, so should agents use it by default in templates?
+
+Q7. **Level 2 without `SOFTWARE.bib`.** With packages installed by `deps()`
+[S0], most analyses have no `SOFTWARE.bib`, and qcTAF then fails
+`qc.software.bib.processed` as well as `exists` and `valid`. [TRL] should say
+that all three may fail, or qcTAF should pass `processed` when there is no
+`SOFTWARE.bib`. Also, the [markers] pattern for T8 looks for `sag*.xml`, and
+would miss the CSV that `writeSAG()` now writes.

@@ -37,6 +37,10 @@ https://sid.ices.dk/services/odata4/StockListDWs4
            PreviousStockKeyLabel,YearOfLastAssessment
 ```
 
+The `$filter` and `$select` values contain spaces and quotes, so URL-encode
+them, e.g. `curl -G <url> --data-urlencode "\$filter=..." --data-urlencode
+"\$select=..."`, or `utils::URLencode(x, reserved = TRUE)` in R.
+
 The answer is JSON, with one record for each stock and year in `value`. It
 gives:
 
@@ -70,8 +74,29 @@ out:
   (`ices-taf/<year>_<stock>_assessment`), or on stockassessment.org;
 - the data: which files, where they come from, and whether any are restricted
   (RDB, InterCatch, RDBES, VMS, logbooks) [D3];
-- what the assessment must produce: the summary table, a forecast, SAG upload,
-  a report.
+- any input file the starting point does not expect (e.g. survey CVs, biology
+  for the forecast years, a TAC series): what it holds and how the assessment
+  uses it. Do not guess how to use a file; if the developer does not say, leave
+  it out and say so;
+- what the assessment must produce: the summary table, a forecast, SAG and ASD
+  upload files, a report;
+- if there is a forecast, its settings (below).
+
+### Forecast settings
+
+These are science decisions; ask for each, and record the answers in the
+README. Where the template has a value, show it and ask whether to keep it.
+
+- Reference points: Blim, Bpa, MSY Btrigger, Fmsy and its range, Fpa, Flim.
+- The TAC of the intermediate year, and where it comes from.
+- The intermediate-year assumption: F status quo (and how it is set, e.g. the
+  last year or a mean of the last three) or the TAC.
+- The years averaged for weights, maturity, natural mortality and
+  selectivity, or the values given for the forecast years.
+- The years recruitment is resampled from.
+- The catch scenarios to run.
+- The number of simulations: a small number while developing, more for the
+  advice.
 
 ## 2. Choose a starting point
 
@@ -91,6 +116,10 @@ Copy the starting point into the assessment repository. Then:
 - copy only the scripts the analysis runs, so that `deps()` finds only the
   packages it needs;
 - remove the example's data and results;
+- find the example's values the template keeps as placeholders or fallbacks
+  (reference points, TAC, stock information, the example's stock code) and
+  replace or confirm each with the developer; list any that remain in the
+  README;
 - write the `.gitignore` entries of `taf.skeleton()` [L6];
 - remove anything that breaks the rules, such as a top-level script that
   installs packages [C6, S6].
@@ -100,8 +129,10 @@ Copy the starting point into the assessment repository. Then:
 1. Put the files the developer provides in `boot/initial/data` [B6].
 2. Data to download go in a boot script `boot/<key>.R`, or a URL entry for a
    file that is always there [B11, B13].
-3. Write `boot/DATA.bib` with `draft.data()`, then fill in each entry with the
-   developer [B3, B16]. Keep restricted data off GitHub [D3].
+3. Write `boot/DATA.bib`, starting from the template's or with `draft.data()`,
+   then fill in each entry with the developer [B3, B16]. `draft.data()` (TAF
+   4.4.0) leaves out `access` when it is Public and can leave `title` and
+   `period` empty, so check every field. Keep restricted data off GitHub [D3].
 4. Use R packages from CRAN or the `fishfollower`, `ices-tools-prod` and
    `flr` r-universes, and install the missing ones with
    `install.packages(deps(installed = FALSE), repos = ...)` [S0]. Declare only other
@@ -126,16 +157,28 @@ of what it reads and writes [C11].
 Use the TAF helpers [C10], and keep the packages to those the analysis needs
 [C12]. Plots may use base R or ggplot2; follow the template.
 
+In `data.R`, check the inputs and stop with a clear message if they fail [T1]:
+the same years and ages across files, no negative numbers or weights, the
+landed fraction between 0 and 1, and, where both are given, catch close to
+landings plus discards (catch weight against landing and discard weights and
+the landed fraction). Report a failure to the developer; do not change the
+data to pass.
+
 After each script, compare the results with the developer's expectations, and
 with the earlier assessment if there is one. Raise any difference; do not
 adjust the analysis to make it go away.
 
+Tell the developer how long each step takes. A forecast or a full run test can
+take from minutes to hours; while developing, use the quick settings (e.g. a
+small number of forecast simulations) and say so.
+
 ## 6. Check
 
-1. Run the integrity check of `taf-workflow` [R1].
-2. Run the `taf-qc` skill and fix what it finds.
-3. Tell the developer which template markers the assessment has, and which are
-   missing [T1–T10].
+1. Run the `taf-qc` skill and fix what it finds. Its run test is the
+   integrity check of `taf-workflow` [R1]; do not run both.
+2. Tell the developer which template markers the assessment has, and which are
+   missing [T1–T10]: search the scripts named in the table for the functions
+   it lists.
 
 ## Record
 

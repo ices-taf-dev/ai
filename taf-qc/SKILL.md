@@ -17,7 +17,8 @@ cited as `[ID]` are in `../references/rules.md`.
 The checks follow the TAF readiness levels:
 
 - **Level 2**, the QC test: `qcTAF::qc()` passes. An analysis with no
-  `SOFTWARE.bib` still passes, but one with an invalid `SOFTWARE.bib` does not.
+  `SOFTWARE.bib` still passes (its three `SOFTWARE.bib` checks fail), but one
+  with an invalid `SOFTWARE.bib` does not.
 - **Level 3**, the QC run test: the analysis runs from start to finish after a
   full clean [R1].
 
@@ -60,7 +61,8 @@ code:
    [R2].
 
 Ask the developer first if the run is likely to be long, or needs software or
-access they may not have.
+access they may not have. A forecast with many simulations can take most of an
+hour; say how long the last run took.
 
 ## 4. Report
 
@@ -86,6 +88,16 @@ After fixing, run the checks again and report what changed.
 ## Known limits of qcTAF
 
 - `qc.data.bib.valid` checks only the first entry of `DATA.bib`.
-- `qc.only.relative.paths` checks only the top-level scripts.
+- `qc.only.relative.paths` checks only the top-level scripts, and fails on a
+  URL in quotes or angle brackets, e.g. `"https://..."`
+  ([qcTAF#1](https://github.com/ices-tools-prod/qcTAF/issues/1)). Read the
+  lines it objects to; a URL is not an absolute path.
+- `qc.initial.data` returns `NA` when `DATA.bib` has `source = {folder}`
+  entries ([qcTAF#2](https://github.com/ices-tools-prod/qcTAF/issues/2)).
+  Compare the folders by hand, e.g. `diff -r boot/initial/data boot/data` for
+  those entries, and report the result.
+- Without a `SOFTWARE.bib`, `qc.software.bib.exists`, `.valid` and
+  `.processed` all fail. That is expected when packages are installed with
+  `deps()` [S0], and still passes level 2.
 - `qc.data.bib.missing.attributes` is described in the dashboard guide but is
   not yet in qcTAF.
