@@ -80,7 +80,7 @@ From [TRL]. A skill should say which level it is aiming for.
 
 | ID | Rule | Severity | Sources | Check |
 |---|---|---|---|---|
-| S0 | R packages come from CRAN or the r-universes of `fishfollower` and `ices-tools-prod`. They are installed with `install.deps()` before the boot, and need no `SOFTWARE.bib` entry. | error | [decision] 2026-11-20; [TAF] `?install.deps` | none |
+| S0 | R packages come from CRAN or the r-universes of `fishfollower` and `ices-tools-prod`. They are installed before the boot with `install.packages(deps(installed = FALSE), repos = ...)`, and need no `SOFTWARE.bib` entry. | error | [decision] 2026-11-20; [TAF] `?deps` | none |
 | S1 | `boot/SOFTWARE.bib` declares other key software, such as model executables. It is optional, but if it is present it must be valid. | warning (missing), error (invalid) | [TRL]; [qcTAF] 2; [workflow] | `qc.software.bib.exists`, `qc.software.bib.valid` |
 | S2 | Every entry has `version` and `source`. A development version gives its branch and commit date in `version`, and a 7-character SHA in `source`. | warning | [wiki] Bib entries; [TAF] `?draft.software` | none |
 | S3 | An entry comes after every entry it depends on. | error | [wiki] Bib entries; [TAF] `?taf.install` | none |
@@ -92,7 +92,7 @@ From [TRL]. A skill should say which level it is aiming for.
 
 | ID | Rule | Severity | Sources | Check |
 |---|---|---|---|---|
-| C1 | Scripts run in order: `data.R`, `model.R`, `output.R`, `report.R`. Each starts by reading files from the step before and ends by writing files. | error | [TAF] `?TAF-package`; [qcTAF] 11; [workflow] | QC run test (level 3) |
+| C1 | Scripts run in order: `data.R`, `model.R`, `output.R`, `report.R`. Data flow forwards: each script reads only from `boot/data` and the folders of earlier steps, and ends by writing files. So `data.R` reads `boot/data`; `model.R` also `data`; `output.R` also `model`; `report.R` also `output`. | error | [TAF] `?TAF-package`; [qcTAF] 11; [workflow] | QC run test (level 3) |
 | C2 | Each script writes only to its own folder (`data.R` to `data/` and so on), and creates that folder with `mkdir()`. | error | [rules] 1.1.2(c); [qcTAF] 12; [TAF] `?source.taf` | none |
 | C3 | Only files carry over between scripts, not objects in memory. The server runs `source.taf(taf = TRUE)`: `rm`, `clean` and `detach` are all `TRUE`. | error | [TAF] `?source.taf` | QC run test |
 | C4 | `data.R` reads from `boot/data`, using `taf.data.path()` where it helps. | warning | [TAF] `?taf.skeleton`, `?taf.data.path`; [wiki] Creating TAF datasets | none |
@@ -119,7 +119,7 @@ From [TRL]. A skill should say which level it is aiming for.
 
 | ID | Rule | Severity | Sources | Check |
 |---|---|---|---|---|
-| R1 | A fresh clone runs successfully after a full clean: `install.deps()` [S0], `clean.boot(force = TRUE)`, `clean()`, `taf.boot()`, `source.all()`. | error | [qcTAF] 10; [workflow]; [TAF] `?clean` | QC run test |
+| R1 | A fresh clone runs successfully after a full clean: install missing packages [S0], `clean.boot(force = TRUE)`, `clean()`, `taf.boot()`, `source.all()`. | error | [qcTAF] 10; [workflow]; [TAF] `?clean` | QC run test |
 | R2 | A re-run gives the same or similar results. Compare the CSV outputs row for row. | error | [qcTAF] 10; [gov] | none |
 | R3 | On the server, boot runs with `taf.boot(taf = TRUE)`, which forces a download of everything. Test that way before submitting. | warning | [TAF] `?taf.boot`; [wiki] Example TAF scripts 1 | none |
 | R4 | Run the integrity check (R1, then all four folders exist and are not empty) before and after any change. | warning | [workflow] | none |

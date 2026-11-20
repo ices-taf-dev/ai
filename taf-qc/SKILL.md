@@ -43,6 +43,7 @@ code:
 
 - `.R` file extensions in uppercase [L5];
 - install and download functions outside boot scripts [C6, S6];
+- each script reading only from `boot/data` and earlier steps [C1];
 - each script writing only to its own folder [C2];
 - non-ASCII text that is not UTF-8, using `file.encoding()` [C8];
 - credentials or confidential information [D1, D2];
@@ -51,7 +52,7 @@ code:
 
 ## 3. Run test
 
-1. Run `install.deps()` with the r-universe repos [S0], then
+1. Install missing packages with `deps()` and the r-universe repos [S0], then
    `clean.boot(force = TRUE)`, `clean()`, `taf.boot(taf = TRUE)` and
    `source.all()` [R1, R3].
 2. Check that `data`, `model`, `output` and `report` exist and have files.

@@ -34,7 +34,7 @@ https://sid.ices.dk/services/odata4/StockListDWs4
   ?$filter=StockKeyLabel eq 'cod.27.46a7d20' and ActiveYear eq 2026
   &$select=StockKeyLabel,StockKeyDescription,ActiveYear,ExpertGroup,
            AdviceDraftingGroup,DataCategory,ModelName,ModelType,
-           PreviousStockKeyLabel,YearOfLastAssessment,AssessmentKey
+           PreviousStockKeyLabel,YearOfLastAssessment
 ```
 
 The answer is JSON, with one record for each stock and year in `value`. It
@@ -43,9 +43,7 @@ gives:
 - `ExpertGroup`: the working group, e.g. WGNSSK;
 - `AdviceDraftingGroup`: e.g. ADGNS;
 - `DataCategory`: the ICES category, e.g. 1, or 3.2;
-- `ModelName` and `ModelType`: e.g. SAM, A (age-based);
-- `AssessmentKey`: the assessment in the Stock Assessment Graphs database
-  (SAG), with the published results to compare against.
+- `ModelName` and `ModelType`: e.g. SAM, A (age-based).
 
 Assume the assessment is for the current year. If SID has no records for the
 current year yet, use the latest year it has
@@ -90,7 +88,9 @@ Confirm the choice with the developer.
 Copy the starting point into the assessment repository. Then:
 
 - use a `boot` folder, renaming `bootstrap` if needed [L1];
-- remove the example's data and results, keeping the scripts;
+- copy only the scripts the analysis runs, so that `deps()` finds only the
+  packages it needs;
+- remove the example's data and results;
 - write the `.gitignore` entries of `taf.skeleton()` [L6];
 - remove anything that breaks the rules, such as a top-level script that
   installs packages [C6, S6].
@@ -103,7 +103,8 @@ Copy the starting point into the assessment repository. Then:
 3. Write `boot/DATA.bib` with `draft.data()`, then fill in each entry with the
    developer [B3, B16]. Keep restricted data off GitHub [D3].
 4. Use R packages from CRAN or the `fishfollower` and `ices-tools-prod`
-   r-universes, and install them with `install.deps()` [S0]. Declare only other
+   r-universes, and install the missing ones with
+   `install.packages(deps(installed = FALSE), repos = ...)` [S0]. Declare only other
    software, such as a model executable, in `boot/SOFTWARE.bib` [S1, S2, S3].
 5. Run `taf.boot()`. Check that `boot/data` has what `data.R` will read [B9].
 
@@ -118,8 +119,10 @@ Write and run one script at a time, with `source.taf()`, in this order:
 | `output.R` | `output/`: result tables as CSV [F4] | the summary table |
 | `report.R` | `report/`: plots and rounded tables [C9, F5] | the plots |
 
-Each script reads only from the step before and writes only to its own folder
-[C1, C2]. Start each one with a short header of what it reads and writes [C11].
+Data flow forwards: each script reads only from `boot/data` and the folders of
+earlier steps (`report.R` may read `output`, `model`, `data` and `boot/data`),
+and writes only to its own folder [C1, C2]. Start each one with a short header
+of what it reads and writes [C11].
 Use the TAF helpers [C10], and keep the packages to those the analysis needs
 [C12]. Plots may use base R or ggplot2; follow the template.
 
