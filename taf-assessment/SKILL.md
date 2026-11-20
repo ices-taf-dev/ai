@@ -1,0 +1,100 @@
+---
+name: taf-assessment
+description: Build a new ICES stock assessment as a TAF analysis, starting from
+             a TAF template or an earlier assessment. Use this skill when the
+             developer wants to set up, start, or convert a stock assessment
+             in TAF, or asks which template to use.
+---
+
+# New TAF stock assessment
+
+This skill extends the general TAF workflow skill (`taf-workflow`). Read that
+one for how TAF workflows are structured and run. The rules cited here as
+`[ID]` are in `../references/rules.md`.
+
+The developer may be an expert on the stock but not on R or TAF. Explain each
+step briefly in plain words, show what was made, and ask before moving on.
+
+## Who decides what
+
+The developer decides everything about the science: the data, the model, its
+configuration, priors, reference points, and the forecast settings. Never
+invent or guess these. If a value is missing, ask for it. If the template has an
+example value, say so and ask whether to keep it.
+
+The AI agent decides how the code is laid out, following the TAF rules.
+
+## 1. Ask about the stock
+
+Before writing any code, find out:
+
+- the stock code, the assessment year, and the working group;
+- the ICES category, and the model or method;
+- whether there is an earlier assessment of the stock in TAF
+  (`ices-taf/<year>_<stock>_assessment`), or on stockassessment.org;
+- the data: which files, where they come from, and whether any are restricted
+  (RDB, InterCatch, RDBES, VMS, logbooks) [D3];
+- what the assessment must produce: the summary table, a forecast, SAG upload,
+  a report.
+
+## 2. Choose a starting point
+
+1. An earlier TAF assessment of the same stock is usually the best start, if it
+   runs. Check it with the `taf-qc` skill.
+2. Otherwise use the template that fits, from `templates.md`. Tell the
+   developer what the template does and what it lacks.
+3. If nothing fits, start from `taf.skeleton()` [L7].
+
+Confirm the choice with the developer.
+
+## 3. Set up the repository
+
+Copy the starting point into the assessment repository. Then:
+
+- use a `boot` folder, renaming `bootstrap` if needed [L1];
+- remove the example's data and results, keeping the scripts;
+- write the `.gitignore` entries of `taf.skeleton()` [L6];
+- remove anything that breaks the rules, such as a top-level script that
+  installs packages [C6, S6].
+
+## 4. Boot
+
+1. Put the files the developer provides in `boot/initial/data` [B6].
+2. Data to download go in a boot script `boot/<key>.R`, or a URL entry for a
+   file that is always there [B11, B13].
+3. Write `boot/DATA.bib` with `draft.data()`, then fill in each entry with the
+   developer [B3, B16]. Keep restricted data off GitHub [D3].
+4. Declare software that is not on CRAN in `boot/SOFTWARE.bib`, with an exact
+   version [S1, S2, S3].
+5. Run `taf.boot()`. Check that `boot/data` has what `data.R` will read [B9].
+
+## 5. The four scripts
+
+Write and run one script at a time, with `source.taf()`, in this order:
+
+| Script | Makes | Show the developer |
+|---|---|---|
+| `data.R` | `data/`: input tables as CSV [F2, F3] | the tables, and plots of the inputs |
+| `model.R` | `model/`: the fit, diagnostics, forecast | convergence, and the diagnostics [T6] |
+| `output.R` | `output/`: result tables as CSV [F4] | the summary table |
+| `report.R` | `report/`: plots and rounded tables [C9, F5] | the plots |
+
+Each script reads only from the step before and writes only to its own folder
+[C1, C2]. Start each one with a short header of what it reads and writes [C11].
+Use base R and the TAF helpers [C10, C12].
+
+After each script, compare the results with the developer's expectations, and
+with the earlier assessment if there is one. Raise any difference; do not
+adjust the analysis to make it go away.
+
+## 6. Check
+
+1. Run the integrity check of `taf-workflow` [R1].
+2. Run the `taf-qc` skill and fix what it finds.
+3. Tell the developer which template markers the assessment has, and which are
+   missing [T1–T10].
+
+## Record
+
+Keep a short `README.md` in the repository: the stock, the method, the
+starting point it was made from, and the decisions the developer made.
