@@ -30,6 +30,7 @@ From [rules]:
 | [markers] | [wg_wgtafgov github_repos.R](https://github.com/ices-eg/wg_wgtafgov/blob/master/docs/_taf/site/boot/github_repos.R), `template_markers` |
 | [manifesto] | [wg_wgtafgov TAF Manifesto](https://github.com/ices-eg/wg_wgtafgov/blob/master/TAF_Manifesto/taf_manifesto.Rmd), section given |
 | [workflow] | [taf-workflow/SKILL.md](../taf-workflow/SKILL.md) |
+| [decision] | Decision by the TAF coordinator, date given |
 
 ## Conformance levels
 
@@ -79,12 +80,13 @@ From [TRL]. A skill should say which level it is aiming for.
 
 | ID | Rule | Severity | Sources | Check |
 |---|---|---|---|---|
-| S1 | `boot/SOFTWARE.bib` declares key software that is not on CRAN, such as GitHub packages and model executables. It is optional, but if it is present it must be valid. | warning (missing), error (invalid) | [TRL]; [qcTAF] 2; [workflow] | `qc.software.bib.exists`, `qc.software.bib.valid` |
+| S0 | R packages come from CRAN or the r-universes of `fishfollower` and `ices-tools-prod`. They are installed with `install.deps()` before the boot, and need no `SOFTWARE.bib` entry. | error | [decision] 2026-11-20; [TAF] `?install.deps` | none |
+| S1 | `boot/SOFTWARE.bib` declares other key software, such as model executables. It is optional, but if it is present it must be valid. | warning (missing), error (invalid) | [TRL]; [qcTAF] 2; [workflow] | `qc.software.bib.exists`, `qc.software.bib.valid` |
 | S2 | Every entry has `version` and `source`. A development version gives its branch and commit date in `version`, and a 7-character SHA in `source`. | warning | [wiki] Bib entries; [TAF] `?draft.software` | none |
 | S3 | An entry comes after every entry it depends on. | error | [wiki] Bib entries; [TAF] `?taf.install` | none |
 | S4 | After `taf.boot()`, every entry is in `boot/software` and every file there has an entry. | error | [qcTAF] 3, 5 | `qc.software.bib.processed`, `qc.software.declared` |
 | S5 | Authors are written out in full, as `{First M Last and First M Last}`, with no commas. | note | [rules] 1.3.1(b) | none |
-| S6 | Scripts never install packages. Packages declared in `SOFTWARE.bib` are loaded from the TAF library with `taf.library()`. | error | [rules] 1.1.2(a); [TAF] `?taf.library` | none |
+| S6 | Scripts never install packages. Load packages with `library()`; a package declared in `SOFTWARE.bib` is loaded from the TAF library with `taf.library()`. | error | [rules] 1.1.2(a); [TAF] `?taf.library` | none |
 
 ## 4. Scripts
 
@@ -117,7 +119,7 @@ From [TRL]. A skill should say which level it is aiming for.
 
 | ID | Rule | Severity | Sources | Check |
 |---|---|---|---|---|
-| R1 | A fresh clone runs successfully after a full clean: `clean.boot(force = TRUE)`, `clean()`, `taf.boot()`, `source.all()`. | error | [qcTAF] 10; [workflow]; [TAF] `?clean` | QC run test |
+| R1 | A fresh clone runs successfully after a full clean: `install.deps()` [S0], `clean.boot(force = TRUE)`, `clean()`, `taf.boot()`, `source.all()`. | error | [qcTAF] 10; [workflow]; [TAF] `?clean` | QC run test |
 | R2 | A re-run gives the same or similar results. Compare the CSV outputs row for row. | error | [qcTAF] 10; [gov] | none |
 | R3 | On the server, boot runs with `taf.boot(taf = TRUE)`, which forces a download of everything. Test that way before submitting. | warning | [TAF] `?taf.boot`; [wiki] Example TAF scripts 1 | none |
 | R4 | Run the integrity check (R1, then all four folders exist and are not empty) before and after any change. | warning | [workflow] | none |

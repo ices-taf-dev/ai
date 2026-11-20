@@ -51,7 +51,8 @@ code:
 
 ## 3. Run test
 
-1. Run `clean.boot(force = TRUE)`, `clean()`, then `taf.boot(taf = TRUE)` and
+1. Run `install.deps()` with the r-universe repos [S0], then
+   `clean.boot(force = TRUE)`, `clean()`, `taf.boot(taf = TRUE)` and
    `source.all()` [R1, R3].
 2. Check that `data`, `model`, `output` and `report` exist and have files.
 3. If the analysis has run before, check that the CSV outputs are the same

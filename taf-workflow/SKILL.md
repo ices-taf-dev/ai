@@ -34,8 +34,9 @@ procedure, each data entry is processed and the TAF system then makes the data
 available in the `boot/data` subfolder, where the `data.R` script will read it.
 
 Some TAF workflows also use an optional `SOFTWARE.bib` file to declare key
-software used in the analysis and the version number. It is usually not
-necessary to declare R packages available on CRAN.
+software used in the analysis and the version number. R packages on CRAN or on
+the r-universes of `fishfollower` and `ices-tools-prod` are not declared there;
+they are installed with `install.deps()` (see below).
 
 ## Dependencies
 
@@ -58,9 +59,16 @@ All TAF analyses can be run using the following commands in R:
 
 ```
 library("TAF")
+install.deps(repos = c("https://fishfollower.r-universe.dev",
+                       "https://ices-tools-prod.r-universe.dev",
+                       "https://cloud.r-project.org"))
 taf.boot()
 source.all()
 ```
+
+The `install.deps` function finds the packages used by the TAF scripts and boot
+scripts, and installs those that are missing, from CRAN or the two
+r-universes.
 
 The `taf.boot` function looks for an existing `boot` folder to set up the data
 and software required for the analysis. Then `source.all()` runs the `data.R`,
@@ -126,8 +134,8 @@ https://github.com/ices-taf/2015_had-iceg
 
 The integrity of a TAF workflow can be checked as follows:
 
-1. Run `clean.boot(force=TRUE)` and `clean()` to remove residual files from
-   earlier workflow runs.
+1. Run `install.deps()` as above, then `clean.boot(force=TRUE)` and `clean()`
+   to remove residual files from earlier workflow runs.
 
 2. Run `taf.boot()` to prepare the analysis, making sure that the `boot/data`
    folder contains the files that the `data.R` script will read.
