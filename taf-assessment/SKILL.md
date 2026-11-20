@@ -26,10 +26,48 @@ The AI agent decides how the code is laid out, following the TAF rules.
 
 ## 1. Ask about the stock
 
-Before writing any code, find out:
+Start with the stock code and the assessment year, then look the stock up in
+the ICES Stock Information Database (SID), with its OData v4 service:
 
-- the stock code, the assessment year, and the working group;
-- the ICES category, and the model or method;
+```
+https://sid.ices.dk/services/odata4/StockListDWs4
+  ?$filter=StockKeyLabel eq 'cod.27.46a7d20' and ActiveYear eq 2026
+  &$select=StockKeyLabel,StockKeyDescription,ActiveYear,ExpertGroup,
+           AdviceDraftingGroup,DataCategory,ModelName,ModelType,
+           PreviousStockKeyLabel,YearOfLastAssessment,AssessmentKey
+```
+
+The answer is JSON, with one record for each stock and year in `value`. It
+gives:
+
+- `ExpertGroup`: the working group, e.g. WGNSSK;
+- `AdviceDraftingGroup`: e.g. ADGNS;
+- `DataCategory`: the ICES category, e.g. 1, or 3.2;
+- `ModelName` and `ModelType`: e.g. SAM, A (age-based);
+- `AssessmentKey`: the assessment in the Stock Assessment Graphs database
+  (SAG), with the published results to compare against.
+
+Assume the assessment is for the current year. If SID has no records for the
+current year yet, use the latest year it has
+(`$orderby=ActiveYear desc&$top=1&$select=ActiveYear`).
+
+If no record matches, the code is probably wrong. List the stocks of the same
+species for that year, using the first part of the code:
+
+```
+https://sid.ices.dk/services/odata4/StockListDWs4
+  ?$filter=startswith(StockKeyLabel,'cod.') and ActiveYear eq 2026
+  &$select=StockKeyLabel,StockKeyDescription,ExpertGroup
+```
+
+Suggest the codes that best match the areas in the developer's code, with
+their descriptions, and ask which one they meant.
+
+Show the developer what was found and confirm it is the right stock. Then find
+out:
+
+- the ICES category and the model or method, if SID has none, or they are
+  changing;
 - whether there is an earlier assessment of the stock in TAF
   (`ices-taf/<year>_<stock>_assessment`), or on stockassessment.org;
 - the data: which files, where they come from, and whether any are restricted
