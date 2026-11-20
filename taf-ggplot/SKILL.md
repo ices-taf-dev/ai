@@ -11,8 +11,8 @@ description: Convert base R plots to ggplot2 plots, or create new ggplot2 plots
 
 This skill extends the general TAF workflow skill (`taf-workflow`). Read that
 one for how TAF workflows are structured and run. Invoking this skill means the
-developer has asked for ggplot2 in TAF scripts, which overrides the general base
-R default.
+developer has asked for ggplot2 in TAF scripts, which overrides the general
+preference of base R code in TAF scripts.
 
 The base graphics code in a TAF repository is often deliberately simple. The
 purpose of converting base R plots to ggplot2 is to produce better looking
