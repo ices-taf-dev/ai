@@ -80,7 +80,7 @@ From [TRL]. A skill should say which level it is aiming for.
 
 | ID | Rule | Severity | Sources | Check |
 |---|---|---|---|---|
-| S0 | R packages come from CRAN or the r-universes of `fishfollower` and `ices-tools-prod`. They are installed before the boot with `install.packages(deps(installed = FALSE), repos = ...)`, and need no `SOFTWARE.bib` entry. | error | [decision] 2026-11-20; [TAF] `?deps` | none |
+| S0 | R packages come from CRAN or the r-universes of `fishfollower`, `ices-tools-prod` and `flr`. They are installed before the boot with `install.packages(deps(installed = FALSE), repos = ...)`, and need no `SOFTWARE.bib` entry. | error | [decision] 2026-11-20; [TAF] `?deps` | none |
 | S1 | `boot/SOFTWARE.bib` declares other key software, such as model executables. It is optional, but if it is present it must be valid. | warning (missing), error (invalid) | [TRL]; [qcTAF] 2; [workflow] | `qc.software.bib.exists`, `qc.software.bib.valid` |
 | S2 | Every entry has `version` and `source`. A development version gives its branch and commit date in `version`, and a 7-character SHA in `source`. | warning | [wiki] Bib entries; [TAF] `?draft.software` | none |
 | S3 | An entry comes after every entry it depends on. | error | [wiki] Bib entries; [TAF] `?taf.install` | none |

@@ -102,8 +102,8 @@ Copy the starting point into the assessment repository. Then:
    file that is always there [B11, B13].
 3. Write `boot/DATA.bib` with `draft.data()`, then fill in each entry with the
    developer [B3, B16]. Keep restricted data off GitHub [D3].
-4. Use R packages from CRAN or the `fishfollower` and `ices-tools-prod`
-   r-universes, and install the missing ones with
+4. Use R packages from CRAN or the `fishfollower`, `ices-tools-prod` and
+   `flr` r-universes, and install the missing ones with
    `install.packages(deps(installed = FALSE), repos = ...)` [S0]. Declare only other
    software, such as a model executable, in `boot/SOFTWARE.bib` [S1, S2, S3].
 5. Run `taf.boot()`. Check that `boot/data` has what `data.R` will read [B9].

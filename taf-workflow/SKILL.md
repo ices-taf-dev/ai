@@ -35,7 +35,7 @@ available in the `boot/data` subfolder, where the `data.R` script will read it.
 
 Some TAF workflows also use an optional `SOFTWARE.bib` file to declare key
 software used in the analysis and the version number. R packages on CRAN or on
-the r-universes of `fishfollower` and `ices-tools-prod` are not declared there;
+the r-universes of `fishfollower`, `ices-tools-prod` and `flr` are not declared there;
 they are installed before the boot (see below).
 
 ## Dependencies
@@ -62,6 +62,7 @@ library("TAF")
 install.packages(deps(installed = FALSE),
                  repos = c("https://fishfollower.r-universe.dev",
                            "https://ices-tools-prod.r-universe.dev",
+                           "https://flr.r-universe.dev",
                            "https://cloud.r-project.org"))
 taf.boot()
 source.all()
@@ -69,7 +70,7 @@ source.all()
 
 The `deps` function finds the packages used by the TAF scripts, and
 `installed = FALSE` keeps those that are missing, which are then installed from
-CRAN or the two r-universes. (`install.deps()` does the same, but fails when
+CRAN or the three r-universes. (`install.deps()` does the same, but fails when
 there is no `SOFTWARE.bib`.)
 
 The `taf.boot` function looks for an existing `boot` folder to set up the data
